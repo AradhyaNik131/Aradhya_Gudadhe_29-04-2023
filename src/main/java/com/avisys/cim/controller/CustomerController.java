@@ -116,5 +116,19 @@ public class CustomerController { // CONTROLLER layer
 			return new ResponseEntity<ApiResponse>(new ApiResponse("Customer deleted",true), HttpStatus.OK);
 			
 			}
+			
+//****************************************************
+			
+// Task 6
+			                                       // Delete mobile No form existing customers mobile list
+			@DeleteMapping("/{id}/{mobileNumber}")   
+			public ResponseEntity<ApiResponse> deleteMobileNo(@PathVariable long id, @PathVariable String mobileNumber){
+				this.customerService.deleteMobileNo(id,mobileNumber );
+				return new ResponseEntity<ApiResponse>(new ApiResponse("MobileNo deleted",true), HttpStatus.OK);		
+			}
+			
+			
+			
+			
 
 }

@@ -117,12 +117,26 @@ public class CustomerServiceImpl implements CustomerService {          // SERVIC
 
 
 
+    // Task 5                                     // Delete customer by mobile No
+	@Override
+	public void deleteCustomer(String mobileNumber) {
+//			Customer customer=this.customerRepo.findByMobileNo(mobileNumber);
+			List<Customer> customers = this.customerRepo.findAllCustomers();
 
-
+			for (Customer c : customers) {
+				String[] m = c.getMobileNumber().split(",");
+				for (String str : m) {
+					if (str.equals(mobileNumber)) {
+						this.customerRepo.delete(c);
+					}
+				}
+			}
 
 	
 
-
-
+	}
 	
 }
+
+	
+

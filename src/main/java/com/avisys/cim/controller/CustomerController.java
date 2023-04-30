@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.avisys.cim.Customer;
 import com.avisys.cim.exceptionss.DuplicateMobileNumberException;
+import com.avisys.cim.payload.ApiResponse;
 import com.avisys.cim.payload.CustomerDto;
 import com.avisys.cim.repository.CustomerRepo;
 import com.avisys.cim.service.CustomerService;
@@ -105,6 +106,15 @@ public class CustomerController { // CONTROLLER layer
 				return new ResponseEntity<CustomerDto>(customerDto, HttpStatus.CREATED);
 			}
 	  	
-		
+//************************************************
+			
+// Task 5
+			                                                    // Delete Customer by mobile No
+			@DeleteMapping("/{mobileNumber}")
+			public ResponseEntity<ApiResponse>  deleteCustomerByMob(@PathVariable String mobileNumber){
+			this.customerService.deleteCustomer(mobileNumber);
+			return new ResponseEntity<ApiResponse>(new ApiResponse("Customer deleted",true), HttpStatus.OK);
+			
+			}
 
 }

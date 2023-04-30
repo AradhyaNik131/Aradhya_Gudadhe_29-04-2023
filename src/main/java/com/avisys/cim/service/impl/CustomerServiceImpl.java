@@ -71,7 +71,7 @@ public class CustomerServiceImpl implements CustomerService {          // SERVIC
     // Task 2
 	
 	
-	@Override
+	@Override                                              
 	public CustomerDto createCustomer(CustomerDto cDto) throws DuplicateMobileNumberException {
 		Customer customer = this.modelMapper.map(cDto, Customer.class);
 		if (this.customerRepo.findByMobileNo(customer.getMobileNumber()) != null) {
@@ -83,6 +83,35 @@ public class CustomerServiceImpl implements CustomerService {          // SERVIC
 		i++;
 		Customer addedCustomer = this.customerRepo.findByMobileNo(customer.getMobileNumber());
 		return this.modelMapper.map(addedCustomer, CustomerDto.class);
+	}
+
+
+    // Task 3
+	
+	@Override                                                    // Customer can add multiple numbers 
+	public CustomerDto addMobileNumber(Long id, String mobileNumber) throws DuplicateMobileNumberException {
+		
+		List<Customer> customers = this.customerRepo.findAllCustomers();
+
+		for (Customer c : customers) {
+			String[] m = c.getMobileNumber().split(",");
+			for (String str : m) {
+				if (str.equals(mobileNumber)) {
+					throw new DuplicateMobileNumberException(
+							"Unable to create Customer. Mobile number already present");
+				}
+			}
+		}
+
+		Customer customer = this.customerRepo.findByCustomerId(id);
+		StringBuilder sb = new StringBuilder(customer.getMobileNumber());
+		sb.append(",");
+		sb.append(mobileNumber);
+		customer.setMobileNumber(sb.toString());
+		Customer updatedCustomer = customerRepo.save(customer);
+		return this.modelMapper.map(updatedCustomer, CustomerDto.class);
+		
+		
 	}
 
 

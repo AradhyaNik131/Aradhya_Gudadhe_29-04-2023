@@ -12,7 +12,6 @@ public class ApiResponce {
 	}
 	
 
-	
 	public ApiResponce(String message, boolean success)
 	{
 		this.message = message;

@@ -30,7 +30,7 @@ public interface CustomerRepo extends JpaRepository<Customer, Long>{         // 
 	@Query("SELECT c FROM Customer c WHERE LOWER(c.lastName) LIKE Lower(:key) ")
 	List<Customer> searchByLastName(@Param("key") String lastName );
 	
-	@Query("SELECT c FROM Customer c WHERE LOWER(c.lastName) LIKE Lower(:key1) OR LOWER(u.firstName) LIKE Lower(:key1) ")
+	@Query("SELECT c FROM Customer c WHERE LOWER(c.lastName) LIKE Lower(:key1) OR LOWER(c.firstName) LIKE Lower(:key1) ")
 	List<Customer> searchByFullName(@Param("key1") String Name );
 	
 	@Query("SELECT c FROM Customer c WHERE c.mobileNumber = :mobNo")
@@ -39,6 +39,9 @@ public interface CustomerRepo extends JpaRepository<Customer, Long>{         // 
 	@Modifying
 	@Query("INSERT INTO Customer (id,firstName, lastName, mobileNumber) VALUES (:id,:firstName, :lastName, :mobileNumber)")
 	void createCustomer(@Param("id") long id,@Param("firstName") String firstName, @Param("lastName") String lastName, @Param("mobileNumber") String mobileNumber);
+	
+	@Query("SELECT c FROM Customer c WHERE c.id = :id")
+	public Customer findByCustomerId(@Param("id") Long id);
 	
 	
    }

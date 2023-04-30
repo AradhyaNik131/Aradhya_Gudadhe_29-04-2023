@@ -2,6 +2,8 @@ package com.avisys.cim.repository;
 
 import java.util.List;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -13,7 +15,7 @@ import jakarta.transaction.Transactional;
 
 @Transactional
 @Repository
-public interface CustomerRepo extends CrudRepository<Customer, Long>{         // Data Access Layer
+public interface CustomerRepo extends JpaRepository<Customer, Long>{         // Data Access Layer
 	@Query("Select c from Customer c")
 	public List<Customer> findAllCustomers();
 
@@ -22,18 +24,29 @@ public interface CustomerRepo extends CrudRepository<Customer, Long>{         //
 
 	
 
-	@Query("SELECT u FROM Customer u WHERE LOWER(u.firstName) LIKE Lower(:key)")
+	@Query("SELECT c FROM Customer c WHERE LOWER(c.firstName) LIKE Lower(:key)")
 	List<Customer> searchByFirstName(@Param("key") String firstName );
 	
-	@Query("SELECT u FROM Customer u WHERE LOWER(u.lastName) LIKE Lower(:key) ")
+	@Query("SELECT c FROM Customer c WHERE LOWER(c.lastName) LIKE Lower(:key) ")
 	List<Customer> searchByLastName(@Param("key") String lastName );
 	
-	@Query("SELECT u FROM Customer u WHERE LOWER(u.lastName) LIKE Lower(:key1) OR LOWER(u.firstName) LIKE Lower(:key1) ")
+	@Query("SELECT c FROM Customer c WHERE LOWER(c.lastName) LIKE Lower(:key1) OR LOWER(u.firstName) LIKE Lower(:key1) ")
 	List<Customer> searchByFullName(@Param("key1") String Name );
 	
+	@Query("SELECT c FROM Customer c WHERE c.mobileNumber = :mobNo")
+	Customer checkPresent(@Param("mobNo") String mobileNo);
+
+	@Modifying
+	@Query("INSERT INTO Customer (id,firstName, lastName, mobileNumber) VALUES (:id,:firstName, :lastName, :mobileNumber)")
+	void createCustomer(@Param("id") long id,@Param("firstName") String firstName, @Param("lastName") String lastName, @Param("mobileNumber") String mobileNumber);
+	
+	
+   }
+
 	
 	
 	
 	
 	
-}
+	
+	

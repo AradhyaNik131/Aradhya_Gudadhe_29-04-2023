@@ -1,6 +1,7 @@
 package com.avisys.cim.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
@@ -8,13 +9,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.avisys.cim.Customer;
+import com.avisys.cim.exceptionss.DuplicateMobileNumberException;
 import com.avisys.cim.payload.CustomerDto;
 import com.avisys.cim.repository.CustomerRepo;
 import com.avisys.cim.service.CustomerService;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {          // SERVICE layer
-
+	
+	static long i =5;
+	
 	@Autowired
 	private CustomerRepo customerRepo;                                
 
@@ -27,6 +31,8 @@ public class CustomerServiceImpl implements CustomerService {          // SERVIC
 		
 		return this.modelMapper.map(customer, CustomerDto.class);
 	}
+	
+	
 
 	@Override
 	public List<CustomerDto> getAllCustomers() {                               //  fetch all customers
@@ -53,12 +59,41 @@ public class CustomerServiceImpl implements CustomerService {          // SERVIC
 	}
 
 	@Override
-	public List<CustomerDto> searchName(String keyword) {           // Search Customer by either first Name or Last Name
+	public List<CustomerDto> searchName(String keyword) {           // Search Customer by either first Name or Last N
 		
 		List<Customer> Name= this.customerRepo.searchByFullName("%"+keyword+"%");
 		List<CustomerDto> FullName= Name.stream().map((customer) -> this.modelMapper.map(customer, CustomerDto.class)).collect(Collectors.toList());
 		
 		return FullName  ;
 	}
+
+	
+    // Task 2
+	
+	
+	@Override
+	public CustomerDto createCustomer(CustomerDto cDto) throws DuplicateMobileNumberException {
+		Customer customer = this.modelMapper.map(cDto, Customer.class);
+		if (this.customerRepo.findByMobileNo(customer.getMobileNumber()) != null) {
+			throw new DuplicateMobileNumberException("Unable to create Customer. Mobile number already present");
+		}
+		customer.setId(i);
+		this.customerRepo.createCustomer(customer.getId(), customer.getFirstName(), customer.getLastName(),
+				customer.getMobileNumber());
+		i++;
+		Customer addedCustomer = this.customerRepo.findByMobileNo(customer.getMobileNumber());
+		return this.modelMapper.map(addedCustomer, CustomerDto.class);
+	}
+
+
+
+
+
+
+
+	
+
+
+
 	
 }

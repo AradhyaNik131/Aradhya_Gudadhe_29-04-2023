@@ -90,5 +90,21 @@ public class CustomerController { // CONTROLLER layer
 			return new ResponseEntity<CustomerDto>(updatedCustomer, HttpStatus.OK);
 
 		}
+		
+	//*************************************************************
+		
+	// Task 4
+		
+		// Create Customer having multiple mobile no.
+		
+		
+			@PostMapping("/")
+			public ResponseEntity<CustomerDto> createCustomerWithMultiMobNo(@RequestBody CustomerDto cDto)
+					throws com.avisys.cim.exceptionss.DuplicateMobileNumberException {
+				CustomerDto customerDto = this.customerService.createCustomer(cDto);
+				return new ResponseEntity<CustomerDto>(customerDto, HttpStatus.CREATED);
+			}
+	  	
+		
 
 }
